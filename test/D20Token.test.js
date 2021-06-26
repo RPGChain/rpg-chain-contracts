@@ -50,7 +50,6 @@ contract('D20Token', (accounts)=>{
             let newBalance = await contract.balanceOf(accounts[0]);
             let expected = initialBalance - 1000;
             assert.equal(newBalance, expected, "Balance should be reduced.");
-            await contract.burn(1);
         })
     })
 
