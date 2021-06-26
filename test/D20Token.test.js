@@ -53,4 +53,16 @@ contract('D20Token', (accounts)=>{
         })
     })
 
+    describe('send', async() => {
+        it('can send tokens', async() => {
+            let initialBalance = await contract.balanceOf(accounts[0]);
+            let amountToSend = 10000;
+            await contract.transfer(accounts[1], amountToSend);
+            let newBalance = await contract.balanceOf(accounts[0]);
+            let newRecipientBalance = await contract.balanceOf(accounts[1]);
+            assert.equal(newBalance, initialBalance-amountToSend);
+            assert.equal(newRecipientBalance, amountToSend);
+        })
+    })
+
 })
