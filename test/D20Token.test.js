@@ -65,4 +65,28 @@ contract('D20Token', (accounts)=>{
         })
     })
 
+    describe('roll', async() => {
+        it('rolls on send', async() => {
+            let initialRollCount = await contract.rollsCountFrom(accounts[0]);
+            await contract.transfer(accounts[1], 10000);
+            let rollCount = await contract.rollsCountFrom(accounts[0]);
+            assert.equal(parseInt(rollCount), parseInt(initialRollCount)+1);
+        })
+        it('gets roll for account', async() => {
+            let rollResult = await contract.rollsResultFrom(accounts[0],0);
+            console.log(rollResult);
+            assert.equal(rollResult > 0 && rollResult <= 20, true);
+        })
+        it('gets roll for account and recipient', async() => {
+            await contract.transfer(accounts[2], 10000);
+            let senderRollCount = await contract.rollsCountFrom(accounts[0]);
+            assert.equal(senderRollCount, 3);
+            recipientRollCount = await contract.rollsCountFromTo(accounts[0], accounts[2]);
+            assert.equal(recipientRollCount, 1);
+            let recipientRollResult = await contract.rollsResultFromTo(accounts[0], accounts[2], 0);
+            console.log(recipientRollResult);
+            assert.equal(recipientRollResult > 0 && recipientRollResult <= 20, true);
+        })
+    })
+
 })
