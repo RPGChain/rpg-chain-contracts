@@ -65,4 +65,46 @@ contract('D20Token', (accounts)=>{
         })
     })
 
+    describe('funds', async() => {
+        it('can withdrawl contract funds', async() => {
+            let contractBalanceInitial = await contract.balanceOf(contract.address);
+            let account = accounts[0];
+            let accountBalanceInitial = await contract.balanceOf(account);
+            console.log(contract.address);
+            console.log(contractBalanceInitial);
+            console.log(account);
+            console.log(accountBalanceInitial);
+            /*let user1 = accounts[1];
+            let user1Balance = await contract.balanceOf(user1);
+            console.log(contract.address);
+            console.log(wallet);
+            console.log(walletBalance);
+            console.log(user1);
+            console.log(user1Balance);
+            // Start user1 with some funds +10000
+            await contract.transfer(user1, 10000);
+            user1Balance = await contract.balanceOf(user1);
+            console.log(user1Balance);
+            // user accidentally sends 1000 to the contract address*/
+            await contract.transfer(contract.address, 10000);
+            let contractBalance = await contract.balanceOf(contract.address);
+            let accountBalance = await contract.balanceOf(account);
+            console.log(contractBalance);
+            console.log(accountBalance);
+
+            //let withdrawalResponse = await contract.withdrawalToWallet();
+            let withdrawalResponse = await contract.withdrawalToWallet.call();
+            console.log(withdrawalResponse);
+            
+            contractBalance = await contract.balanceOf(contract.address);
+            accountBalance = await contract.balanceOf(account);
+            console.log(contractBalance);
+            console.log(accountBalance);
+
+            //assert.equal(accountBalance, accountBalanceInitial);
+            assert.equal(contractBalance, contractBalanceInitial);
+            
+        })
+    })
+
 })
