@@ -5,13 +5,11 @@ import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Burnable.sol";
 
 contract D20Token is ERC20, ERC20Burnable {
-    // Owner wallet
-    address payable wallet;
-    // Maximum total supply of the token (20M)
+    address payable creatorWallet;
     uint256 private _maxTotalSupply = 20000000000000000000000000;
 
     constructor() ERC20("D20Token", "D20") {
-        wallet = payable(msg.sender);
+        creatorWallet = payable(msg.sender);
         mint(_maxTotalSupply);
     }
 
@@ -26,8 +24,8 @@ contract D20Token is ERC20, ERC20Burnable {
     }
 
     function withdrawalToWallet() public payable {
-        require(msg.sender == wallet);
+        require(msg.sender == creatorWallet);
         address(this).balance;
-        wallet.transfer(address(this).balance);
+        creatorWallet.transfer(address(this).balance);
     }
 }
