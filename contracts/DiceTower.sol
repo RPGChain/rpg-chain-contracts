@@ -6,6 +6,8 @@ import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 contract DiceTower {
     address payable creatorWallet;
     IERC20 private _d20TokenContractAddress;
+    mapping(address => mapping(uint256 => mapping(uint256 => uint256)))
+        private _rolls; // _rolls[sender][d20][rollId] = roll result
 
     constructor() {
         creatorWallet = payable(msg.sender);
@@ -24,12 +26,27 @@ contract DiceTower {
         return "DiceTower";
     }
 
-    receive() external payable {
-        // Require the correct token(s) [D20]
-        // Role the dice and return the funds
+    function rollDiceD20() external payable {
+        require(
+            _d20TokenContractAddress.allowance(msg.sender, address(this)) > 0
+        );
+        require(
+            _d20TokenContractAddress.transferFrom(msg.sender, address(this), 1)
+        );
+        uint256 rollId = 1; //TODO - get length of rolls from this address
+        _rollDice(msg.sender, rollId, 20);
+        // TODO - Return Dice
+        //emit Rolled(rollId);
     }
 
-    function roll() external payable {
-        //emit Rolled(var);
+    function _rollDice(
+        address sender,
+        uint256 rollId,
+        uint256 diceType
+    ) private {
+        // TODO - Roll random value based on diceType
+        //mapping roll;
+        // TODO - Store roll
+        //_rolls.push();
     }
 }
