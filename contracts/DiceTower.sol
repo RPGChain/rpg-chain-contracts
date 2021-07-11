@@ -42,17 +42,13 @@ contract DiceTower {
             ),
             "fail send"
         );
-        uint256 rollId = _rollCounts[msg.sender];
-        _rollDice(msg.sender, 20);
-        /*_d20TokenContractAddress.approve(msg.sender, 1000000000000000000);
+        _d20TokenContractAddress.approve(msg.sender, 1000000000000000000);
         require(
-            _d20TokenContractAddress.transferFrom(
-                address(this),
-                msg.sender,
-                1000000000000000000
-            ),
-            "fail return"
-        );*/
+            _d20TokenContractAddress.allowance(address(this), msg.sender) > 0,
+            "allowance"
+        );
+        _rollDice(msg.sender, 20);
+        _d20TokenContractAddress.transfer(msg.sender, 1000000000000000000);
         //emit Rolled(rollId);
     }
 
@@ -73,7 +69,7 @@ contract DiceTower {
     }
 
     function _rollDice(address sender, uint256 diceType) private {
-        uint256 rollResult = random(1, 20);
+        uint256 rollResult = random(1, diceType);
         _rolls[sender].push(rollResult);
         _rollCounts[msg.sender]++;
     }
