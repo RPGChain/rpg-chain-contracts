@@ -44,10 +44,14 @@ contract DiceTower {
         );
         uint256 rollId = _rollCounts[msg.sender];
         _rollDice(msg.sender, 20);
-        /*_d20TokenContractAddress.transferFrom(
-            msg.sender,
-            address(this),
-            1000000000000000000
+        /*_d20TokenContractAddress.approve(msg.sender, 1000000000000000000);
+        require(
+            _d20TokenContractAddress.transferFrom(
+                address(this),
+                msg.sender,
+                1000000000000000000
+            ),
+            "fail return"
         );*/
         //emit Rolled(rollId);
     }
