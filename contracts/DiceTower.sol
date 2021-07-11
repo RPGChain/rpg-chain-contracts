@@ -10,6 +10,8 @@ contract DiceTower {
     mapping(address => uint256[]) private _rolls;
     mapping(address => uint256) private _rollCounts;
 
+    uint256 randNonce;
+
     constructor() {
         creatorWallet = payable(msg.sender);
     }
@@ -42,7 +44,11 @@ contract DiceTower {
         );
         uint256 rollId = _rollCounts[msg.sender];
         _rollDice(msg.sender, 20);
-        // TODO - Return Dice
+        /*_d20TokenContractAddress.transferFrom(
+            msg.sender,
+            address(this),
+            1000000000000000000
+        );*/
         //emit Rolled(rollId);
     }
 
@@ -63,8 +69,17 @@ contract DiceTower {
     }
 
     function _rollDice(address sender, uint256 diceType) private {
-        uint256 rollResult = 9; //TODO - Roll random value based on diceType
+        uint256 rollResult = random(1, 20);
         _rolls[sender].push(rollResult);
         _rollCounts[msg.sender]++;
+    }
+
+    function random(uint256 min, uint256 max) internal returns (uint256) {
+        uint256 randomnumber = uint256(
+            keccak256(abi.encodePacked(block.timestamp, msg.sender, randNonce))
+        ) % (max - min);
+        randomnumber = randomnumber + min;
+        randNonce++;
+        return randomnumber;
     }
 }
