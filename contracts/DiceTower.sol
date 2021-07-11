@@ -16,6 +16,13 @@ contract DiceTower {
         creatorWallet = payable(msg.sender);
     }
 
+    event Rolled(
+        address indexed _sender,
+        uint256 indexed _diceType,
+        uint256 _rollIndex,
+        uint256 rollResult
+    );
+
     function setD20TokenContractAddress(IERC20 d20TokenContractAddress) public {
         require(msg.sender == creatorWallet);
         _d20TokenContractAddress = d20TokenContractAddress;
@@ -49,7 +56,6 @@ contract DiceTower {
         );
         _rollDice(msg.sender, 20);
         _d20TokenContractAddress.transfer(msg.sender, 1000000000000000000);
-        //emit Rolled(rollId);
     }
 
     function getRollsForAccount(address account)
@@ -70,8 +76,10 @@ contract DiceTower {
 
     function _rollDice(address sender, uint256 diceType) private {
         uint256 rollResult = random(1, diceType);
+        uint256 rollIndex = _rollCounts[msg.sender];
         _rolls[sender].push(rollResult);
         _rollCounts[msg.sender]++;
+        emit Rolled(sender, diceType, rollIndex, rollResult);
     }
 
     function random(uint256 min, uint256 max) internal returns (uint256) {
